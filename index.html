@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>TMS | Time Management Site DIY</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- 헤더 영역 -->
+  <header class="main-header">
+    <h1 class="site-title">TMS</h1>
+    <p class="site-subtitle">Time Management Site DIY</p>
+  </header>
+
+  <main class="main-container">
+
+    <!-- 사용자 / 날짜 컨트롤 바 -->
+    <section class="control-bar">
+
+      <!-- 사용자 선택 (가짜 로그인 개념) -->
+      <div class="control-block">
+        <h3 class="control-title">사용자</h3>
+        <div class="control-row">
+          <label for="user-name-input">닉네임</label>
+          <input type="text" id="user-name-input" placeholder="예: guest, junwhi">
+          <button id="user-apply-btn">적용</button>
+        </div>
+        <p class="control-info">
+          현재 사용자: <span id="current-user-label">-</span><br>
+          (동일 브라우저에서만 저장됩니다.)
+        </p>
+      </div>
+
+      <!-- 날짜 선택 (달력) -->
+      <div class="control-block">
+        <h3 class="control-title">날짜</h3>
+        <div class="control-row">
+          <label for="plan-date-input">계획 날짜</label>
+          <input type="date" id="plan-date-input">
+        </div>
+        <div class="control-row">
+          <button id="go-today-btn">오늘로 이동</button>
+          <button id="reset-day-btn" class="danger-btn">이 날짜 계획 초기화</button>
+        </div>
+        <p class="control-info">
+          선택한 날짜의 타임 박스 계획을 저장/불러옵니다.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- 소개 영역 -->
+    <section class="hero">
+      <h2>오늘 하루, 블록으로 관리해 보자</h2>
+      <p>
+        TMS는 하루 24시간을 10분 단위로 나눈 144개의 박스로 관리하는
+        타임 박싱(Time Boxing) 도구입니다.<br>
+        상단에서 사용자와 날짜를 선택한 뒤, 아래 타임 박스에 할 일을 채워보세요.
+      </p>
+    </section>
+
+    <!-- 범위 입력 도구 -->
+    <section class="range-section">
+      <h2>여러 시간대를 한 번에 채우기</h2>
+      <p class="range-guide">
+        시작 시간과 끝 시간을 선택한 뒤, 내용과 카테고리를 입력하고
+        "범위 적용" 버튼을 누르면 해당 구간의 모든 박스가 한 번에 채워집니다.
+      </p>
+
+      <div class="range-form">
+
+        <div class="range-row">
+          <div class="range-field">
+            <label>시작 시간</label>
+            <div class="range-inline">
+              <select id="start-hour-select"></select>
+              <span>:</span>
+              <select id="start-minute-select"></select>
+            </div>
+          </div>
+
+          <div class="range-field">
+            <label>끝 시간</label>
+            <div class="range-inline">
+              <select id="end-hour-select"></select>
+              <span>:</span>
+              <select id="end-minute-select"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="range-row">
+          <div class="range-field">
+            <label for="range-task-input">할 일 내용</label>
+            <input type="text" id="range-task-input" placeholder="예: 전공 공부, 운동, 이동 시간 등">
+          </div>
+
+          <div class="range-field">
+            <label for="task-category-select">카테고리</label>
+            <select id="task-category-select">
+              <option value="default">기본</option>
+              <option value="study">공부</option>
+              <option value="work">업무/프로젝트</option>
+              <option value="exercise">운동</option>
+              <option value="rest">휴식</option>
+              <option value="etc">기타</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="range-row range-buttons">
+          <button id="apply-range-btn">범위 적용</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 타임 박싱 영역 -->
+    <section class="timeboxing-section">
+      <h2>Time Boxing (10분 단위)</h2>
+      <p class="timeboxing-guide">
+        각 행은 한 시간(0시 ~ 23시), 각 행의 6칸은 순서대로
+        00, 10, 20, 30, 40, 50분입니다.<br>
+        개별 박스를 클릭해 직접 수정할 수도 있고, 위의 "범위 입력" 도구를 활용해
+        여러 칸을 한 번에 채울 수도 있습니다.
+      </p>
+
+      <!-- 24시간 × 6칸(10분 단위) 그리드가 JS로 생성될 영역 -->
+      <div id="timeboxing-grid" class="timeboxing-grid"></div>
+    </section>
+
+  </main>
+
+  <!-- 푸터 영역 -->
+  <footer class="main-footer">
+    <p>&copy; 2025 TMS - Time Management Site DIY</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

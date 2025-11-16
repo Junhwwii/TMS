@@ -1,0 +1,295 @@
+/* 전체 페이지 기본 설정 */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  color: #333;
+}
+
+/* 헤더 디자인 */
+.main-header {
+  background-color: #4a90e2;
+  color: white;
+  text-align: center;
+  padding: 24px 0 18px 0;
+}
+
+.site-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.site-subtitle {
+  margin: 6px 0 0 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* 메인 컨테이너 */
+.main-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 16px 40px 16px;
+}
+
+/* 공통 카드 스타일 */
+.control-bar,
+.hero,
+.range-section,
+.timeboxing-section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 16px 18px 20px 18px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+}
+
+/* 컨트롤 바 (사용자 + 날짜) */
+.control-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.control-block {
+  flex: 1;
+  min-width: 260px;
+}
+
+.control-title {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.control-row label {
+  font-size: 13px;
+}
+
+.control-row input[type="text"],
+.control-row input[type="date"],
+.control-row select {
+  padding: 4px 6px;
+  font-size: 13px;
+}
+
+.control-row button {
+  padding: 5px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid #4a90e2;
+  background-color: #4a90e210;
+}
+
+.danger-btn {
+  border-color: #e64a4a;
+  color: #e64a4a;
+  background-color: #ffecec;
+}
+
+.control-info {
+  font-size: 12px;
+  color: #666;
+  margin: 4px 0 0 0;
+}
+
+/* 소개 섹션 */
+.hero h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.hero p {
+  margin-bottom: 0;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+/* 범위 입력 섹션 */
+.range-section h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.range-guide {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.range-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.range-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.range-field {
+  flex: 1;
+  min-width: 240px;
+}
+
+.range-field label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.range-inline {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.range-inline select {
+  padding: 4px 6px;
+  font-size: 13px;
+}
+
+#range-task-input {
+  width: 100%;
+  padding: 5px 6px;
+  font-size: 13px;
+}
+
+#task-category-select {
+  width: 100%;
+  padding: 5px 6px;
+  font-size: 13px;
+}
+
+.range-buttons {
+  justify-content: flex-end;
+}
+
+#apply-range-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid #4a90e2;
+  background-color: #4a90e2;
+  color: white;
+}
+
+/* 타임 박싱 섹션 */
+.timeboxing-section h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.timeboxing-guide {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* 타임 박싱 그리드 전체 레이아웃 */
+.timeboxing-grid {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* 행 사이 간격 */
+}
+
+/* 각 행: 왼쪽에 시(hour) 라벨 + 오른쪽에 6개의 10분 박스 */
+.timeboxing-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 시간 표시 라벨 (예: 09:00) */
+.timeboxing-hour-label {
+  width: 60px;
+  font-size: 12px;
+  text-align: right;
+  color: #555;
+}
+
+/* 10분 단위 박스들이 들어가는 영역 */
+.timeboxing-slots {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6칸 */
+  gap: 4px;
+  flex: 1;
+}
+
+/* 개별 10분 박스 기본 스타일 */
+.time-slot {
+  border: 1px solid #ddd;
+  background-color: #fafafa;
+  height: 26px;
+  font-size: 11px;
+  line-height: 1.2;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 2px 4px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 내용이 채워졌을 때 공통 스타일 */
+.time-slot.filled {
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 카테고리별 색상 */
+.time-slot.cat-default {
+  background-color: #4a90e2;
+  border-color: #4a90e2;
+}
+
+.time-slot.cat-study {
+  background-color: #4caf50; /* 초록 */
+  border-color: #4caf50;
+}
+
+.time-slot.cat-work {
+  background-color: #2196f3; /* 파랑 */
+  border-color: #2196f3;
+}
+
+.time-slot.cat-exercise {
+  background-color: #ff9800; /* 주황 */
+  border-color: #ff9800;
+}
+
+.time-slot.cat-rest {
+  background-color: #9c27b0; /* 보라 */
+  border-color: #9c27b0;
+}
+
+.time-slot.cat-etc {
+  background-color: #607d8b; /* 회청 */
+  border-color: #607d8b;
+}
+
+/* 푸터 디자인 */
+.main-footer {
+  text-align: center;
+  color: #777;
+  padding: 15px 0 20px 0;
+  font-size: 13px;
+}
+
