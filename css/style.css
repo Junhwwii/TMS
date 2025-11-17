@@ -11,7 +11,7 @@ body {
   background-color: #4a90e2;
   color: white;
   text-align: center;
-  padding: 24px 0 18px 0;
+  padding: 20px 0 16px 0;
 }
 
 .site-title {
@@ -31,13 +31,13 @@ body {
 .main-container {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 20px 16px 40px 16px;
+  padding: 16px 16px 40px 16px;
 }
 
 /* 공통 카드 스타일 */
-.control-bar,
 .hero,
 .range-section,
+.category-section,
 .timeboxing-section {
   background-color: #ffffff;
   border-radius: 8px;
@@ -46,23 +46,78 @@ body {
   margin-bottom: 20px;
 }
 
-/* 컨트롤 바 (사용자 + 날짜) */
-.control-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+/* ========= 상단 2 x 2 레이아웃 ========= */
+
+.top-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.4fr;
+  grid-template-rows: auto auto;
+  gap: 12px 16px;
+  margin-bottom: 20px;
 }
 
-.control-block {
-  flex: 1;
-  min-width: 260px;
+.top-row {
+  display: contents; /* 각 박스가 직접 그리드 셀에 배치되도록 */
 }
 
-.control-title {
+.user-box,
+.today-box {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 12px 14px 14px 14px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.user-box {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.motivation-box {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.today-box {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.calendar-box {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* 명언 / 달력 박스 (색 있는 카드) */
+.motivation-box {
+  background-color: #ffe5e5;
+  border: 1px solid #e64a4a;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.calendar-box {
+  background-color: #e6f0ff;
+  border: 1px solid #4a90e2;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.panel-title {
   margin: 0 0 8px 0;
   font-size: 16px;
+  font-weight: bold;
 }
 
+.side-title {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* 사용자 입력 줄은 기존 스타일 재사용 */
 .control-row {
   display: flex;
   align-items: center;
@@ -91,16 +146,127 @@ body {
   background-color: #4a90e210;
 }
 
-.danger-btn {
+.control-info {
+  font-size: 12px;
+  color: #666;
+  margin: 4px 0 0 0;
+}
+
+/* 오늘의 할 일 */
+.today-textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  padding: 6px 8px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.today-help {
+  margin: 4px 0 0 0;
+  font-size: 11px;
+  color: #666;
+}
+
+/* 명언 텍스트 */
+.motivation-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* 달력 스타일 */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.calendar-nav {
+  border: 1px solid #4a90e2;
+  background-color: #ffffff;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.calendar-table th,
+.calendar-table td {
+  text-align: center;
+  padding: 4px 0;
+}
+
+.calendar-table thead th {
+  border-bottom: 1px solid #c5d3f2;
+  color: #444;
+}
+
+.calendar-table tbody td {
+  height: 22px;
+}
+
+.calendar-day {
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.calendar-day.empty {
+  cursor: default;
+}
+
+.calendar-day:hover:not(.empty) {
+  background-color: #dbe6ff;
+}
+
+.calendar-day.selected {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.calendar-day.today {
+  border: 1px solid #4a90e2;
+}
+
+.calendar-help {
+  margin: 2px 0 0 0;
+  font-size: 11px;
+  color: #555;
+}
+
+.calendar-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.calendar-actions button {
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid #4a90e2;
+  background-color: #ffffff;
+}
+
+.calendar-actions .danger-btn {
   border-color: #e64a4a;
   color: #e64a4a;
   background-color: #ffecec;
 }
 
-.control-info {
-  font-size: 12px;
-  color: #666;
-  margin: 4px 0 0 0;
+/* 숨김 날짜 input */
+.hidden-date-input {
+  display: none;
 }
 
 /* 소개 섹션 */
@@ -188,6 +354,105 @@ body {
   color: white;
 }
 
+/* 카테고리 DIY 섹션 */
+.category-section h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.category-guide {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.category-form {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.category-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.category-field {
+  flex: 1;
+  min-width: 180px;
+}
+
+.category-field label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.category-field input[type="text"],
+.category-field input[type="color"] {
+  padding: 4px 6px;
+  font-size: 13px;
+}
+
+.category-button-field {
+  display: flex;
+  align-items: flex-end;
+}
+
+#add-category-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid #4a90e2;
+  background-color: #4a90e2;
+  color: white;
+}
+
+/* 카테고리 목록 */
+.category-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 6px 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background-color: #f0f0f0;
+  font-size: 12px;
+}
+
+.color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+}
+
+.category-name {
+  font-weight: 500;
+}
+
+.category-id {
+  font-size: 11px;
+  color: #777;
+}
+
+.category-delete-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 11px;
+  color: #c0392b;
+}
+
 /* 타임 박싱 섹션 */
 .timeboxing-section h2 {
   margin-top: 0;
@@ -206,7 +471,7 @@ body {
   margin-top: 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px; /* 행 사이 간격 */
+  gap: 4px;
 }
 
 /* 각 행: 왼쪽에 시(hour) 라벨 + 오른쪽에 6개의 10분 박스 */
@@ -227,12 +492,12 @@ body {
 /* 10분 단위 박스들이 들어가는 영역 */
 .timeboxing-slots {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 6칸 */
+  grid-template-columns: repeat(6, 1fr);
   gap: 4px;
   flex: 1;
 }
 
-/* 개별 10분 박스 기본 스타일 */
+/* 개별 10분 박스 */
 .time-slot {
   border: 1px solid #ddd;
   background-color: #fafafa;
@@ -254,37 +519,6 @@ body {
   font-weight: bold;
 }
 
-/* 카테고리별 색상 */
-.time-slot.cat-default {
-  background-color: #4a90e2;
-  border-color: #4a90e2;
-}
-
-.time-slot.cat-study {
-  background-color: #4caf50; /* 초록 */
-  border-color: #4caf50;
-}
-
-.time-slot.cat-work {
-  background-color: #2196f3; /* 파랑 */
-  border-color: #2196f3;
-}
-
-.time-slot.cat-exercise {
-  background-color: #ff9800; /* 주황 */
-  border-color: #ff9800;
-}
-
-.time-slot.cat-rest {
-  background-color: #9c27b0; /* 보라 */
-  border-color: #9c27b0;
-}
-
-.time-slot.cat-etc {
-  background-color: #607d8b; /* 회청 */
-  border-color: #607d8b;
-}
-
 /* 푸터 디자인 */
 .main-footer {
   text-align: center;
@@ -293,3 +527,17 @@ body {
   font-size: 13px;
 }
 
+/* 작은 화면 대응 */
+@media (max-width: 768px) {
+  .top-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .user-box,
+  .motivation-box,
+  .today-box,
+  .calendar-box {
+    width: 100%;
+  }
+}
