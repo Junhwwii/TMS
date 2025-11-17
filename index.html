@@ -15,40 +15,87 @@
 
   <main class="main-container">
 
-    <!-- 사용자 / 날짜 컨트롤 바 -->
-    <section class="control-bar">
+      <main class="main-container">
 
-      <!-- 사용자 선택 (가짜 로그인 개념) -->
-      <div class="control-block">
-        <h3 class="control-title">사용자</h3>
-        <div class="control-row">
-          <label for="user-name-input">닉네임</label>
-          <input type="text" id="user-name-input" placeholder="예: guest, junwhi">
-          <button id="user-apply-btn">적용</button>
-        </div>
-        <p class="control-info">
-          현재 사용자: <span id="current-user-label">-</span><br>
-          (동일 브라우저에서만 저장됩니다.)
-        </p>
+    <!-- 상단 2 x 2 레이아웃: 사용자 / 명언 / 오늘의 할 일 / 달력 -->
+    <section class="top-grid">
+
+      <!-- 1행: 사용자 / 명언 -->
+      <div class="top-row">
+        <!-- 사용자 박스 -->
+        <section class="user-box">
+          <h3 class="panel-title">사용자</h3>
+          <div class="control-row">
+            <label for="user-name-input">닉네임</label>
+            <input type="text" id="user-name-input" placeholder="예: guest, junwhi">
+            <button id="user-apply-btn">적용</button>
+          </div>
+          <p class="control-info">
+            현재 사용자: <span id="current-user-label">-</span><br>
+            (동일 브라우저에서만 저장됩니다.)
+          </p>
+        </section>
+
+        <!-- 명언 박스 -->
+        <section class="motivation-box">
+          <h3 class="side-title">오늘의 한 문장</h3>
+          <p id="motivation-text" class="motivation-text"></p>
+        </section>
       </div>
 
-      <!-- 날짜 선택 (달력) -->
-      <div class="control-block">
-        <h3 class="control-title">날짜</h3>
-        <div class="control-row">
-          <label for="plan-date-input">계획 날짜</label>
-          <input type="date" id="plan-date-input">
-        </div>
-        <div class="control-row">
-          <button id="go-today-btn">오늘로 이동</button>
-          <button id="reset-day-btn" class="danger-btn">이 날짜 계획 초기화</button>
-        </div>
-        <p class="control-info">
-          선택한 날짜의 타임 박스 계획을 저장/불러옵니다.
-        </p>
+      <!-- 2행: 오늘의 할 일 / 달력 -->
+      <div class="top-row">
+        <!-- 오늘의 할 일 -->
+        <section class="today-box">
+          <h3 class="panel-title">오늘의 할 일</h3>
+          <textarea
+            id="today-todo-input"
+            class="today-textarea"
+            placeholder="오늘 꼭 해내고 싶은 핵심 할 일을 적어 보세요."></textarea>
+          <p class="today-help">
+            현재 사용자와 선택한 날짜 기준으로 저장됩니다.
+          </p>
+        </section>
+
+        <!-- 달력 + 오늘로 이동 / 이 날짜 계획 초기화 -->
+        <section class="calendar-box">
+          <h3 class="side-title">달력</h3>
+          <div class="calendar-header">
+            <button id="calendar-prev-btn" class="calendar-nav">&lt;</button>
+            <span id="calendar-title"></span>
+            <button id="calendar-next-btn" class="calendar-nav">&gt;</button>
+          </div>
+          <table class="calendar-table">
+            <thead>
+              <tr>
+                <th>일</th>
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+                <th>토</th>
+              </tr>
+            </thead>
+            <tbody id="calendar-body">
+              <!-- JS에서 채움 -->
+            </tbody>
+          </table>
+          <p class="calendar-help">
+            날짜를 클릭하면 아래 타임 박스와 "오늘의 할 일"이 해당 날짜로 바뀝니다.
+          </p>
+          <div class="calendar-actions">
+            <button id="go-today-btn">오늘로 이동</button>
+            <button id="reset-day-btn" class="danger-btn">이 날짜 계획 초기화</button>
+          </div>
+          <!-- 실제 선택된 날짜를 관리하는 숨김 input -->
+          <input type="date" id="plan-date-input" class="hidden-date-input">
+        </section>
       </div>
 
     </section>
+
+
 
     <!-- 소개 영역 -->
     <section class="hero">
@@ -115,6 +162,36 @@
 
       </div>
     </section>
+
+        <!-- DIY 카테고리 설정 -->
+    <section class="category-section">
+      <h2>카테고리 DIY</h2>
+      <p class="category-guide">
+        타임 박스에 사용할 카테고리를 직접 만들고, 색상도 원하는 대로 설정할 수 있습니다.
+        아래에서 카테고리를 추가하면, 위의 "카테고리" 선택 박스에도 자동으로 반영됩니다.
+      </p>
+
+      <div class="category-form">
+        <div class="category-row">
+          <div class="category-field">
+            <label for="new-category-name">카테고리 이름</label>
+            <input type="text" id="new-category-name" placeholder="예: 시험 공부, 프로젝트, 운동 등">
+          </div>
+          <div class="category-field">
+            <label for="new-category-color">색상</label>
+            <input type="color" id="new-category-color" value="#4a90e2">
+          </div>
+          <div class="category-field category-button-field">
+            <button id="add-category-btn">카테고리 추가</button>
+          </div>
+        </div>
+      </div>
+
+      <ul id="category-list" class="category-list">
+        <!-- JS에서 현재 카테고리 목록을 그려줍니다 -->
+      </ul>
+    </section>
+
 
     <!-- 타임 박싱 영역 -->
     <section class="timeboxing-section">
