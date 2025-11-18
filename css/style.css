@@ -38,13 +38,69 @@ body {
 .hero,
 .range-section,
 .category-section,
-.timeboxing-section {
+.timeboxing-section,
+.settings-section {
   background-color: #ffffff;
   border-radius: 8px;
   padding: 16px 18px 20px 18px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.06);
   margin-bottom: 20px;
 }
+
+/* 소개 + 디자인 설정 2열 레이아웃 */
+.middle-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.4fr; /* 양쪽 폭 동일하게 조정 */
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+
+/* 디자인 설정 섹션 */
+.settings-section h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.settings-guide {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.settings-row label {
+  width: 60px;
+}
+
+.settings-row select {
+  flex: 1;
+  padding: 4px 6px;
+  font-size: 13px;
+}
+
+.settings-help {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #777;
+}
+
+/* 작은 화면에서 세로로 쌓이도록 */
+@media (max-width: 768px) {
+  .middle-grid {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 
 /* ========= 상단 2 x 2 레이아웃 ========= */
 
@@ -540,4 +596,17 @@ body {
   .calendar-box {
     width: 100%;
   }
+}
+
+
+.quote-en {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 4px 0 2px 0;
+}
+
+.quote-kr {
+  font-size: 13px;
+  color: #555;
+  margin: 0;
 }
