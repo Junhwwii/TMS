@@ -39,9 +39,14 @@
         <!-- 명언 박스 -->
         <section class="motivation-box">
           <h3 class="side-title">오늘의 한 문장</h3>
-          <p id="motivation-text" class="motivation-text"></p>
+
+          <!-- 영어 문장 -->
+          <p id="quote-en" class="quote-en"></p>
+
+          <!-- 한국어 번역 -->
+          <p id="quote-kr" class="quote-kr"></p>
         </section>
-      </div>
+
 
       <!-- 2행: 오늘의 할 일 / 달력 -->
       <div class="top-row">
@@ -97,15 +102,58 @@
 
 
 
-    <!-- 소개 영역 -->
-    <section class="hero">
-      <h2>오늘 하루, 블록으로 관리해 보자</h2>
-      <p>
-        TMS는 하루 24시간을 10분 단위로 나눈 144개의 박스로 관리하는
-        타임 박싱(Time Boxing) 도구입니다.<br>
-        상단에서 사용자와 날짜를 선택한 뒤, 아래 타임 박스에 할 일을 채워보세요.
-      </p>
+        <!-- 소개 + 디자인 설정 (2열) -->
+    <section class="middle-grid">
+      <!-- 소개 영역 -->
+      <section class="hero">
+        <h2>오늘 하루, 블록으로 관리해 보자</h2>
+        <p>
+          TMS는 하루 24시간을 10분 단위로 나눈 144개의 박스로 관리하는
+          타임 박싱(Time Boxing) 도구입니다.<br>
+          상단에서 사용자와 날짜를 선택한 뒤, 아래 타임 박스에 할 일을 채워보세요.
+        </p>
+      </section>
+
+      <!-- 디자인 설정 박스 -->
+      <section class="settings-section">
+        <h2>디자인 설정</h2>
+        <p class="settings-guide">
+          이 페이지에서 사용할 폰트와 전체 색 테마를 선택할 수 있습니다.
+          설정은 이 브라우저에만 저장됩니다.
+        </p>
+
+        <div class="settings-row">
+          <label for="font-select">폰트</label>
+          <select id="font-select">
+            <option value="system">기본 (시스템 폰트)</option>
+            <option value="rounded">둥근 고딕 느낌</option>
+            <option value="serif">읽기용 Serif</option>
+            <option value="mono">모노스페이스</option>
+            <option value="casual">캐주얼 산세리프</option>
+          </select>
+        </div>
+
+        <div class="settings-row">
+          <label for="theme-select">테마</label>
+          <select id="theme-select">
+            <option value="light">기본 라이트</option>
+            <option value="red">파스텔 레드</option>
+            <option value="orange">파스텔 오렌지</option>
+            <option value="yellow">파스텔 옐로</option>
+            <option value="green">파스텔 그린</option>
+            <option value="blue">파스텔 블루</option>
+            <option value="purple">파스텔 퍼플</option>
+            <option value="gray">무채색 그레이</option>
+            <option value="dark">다크 모드</option>
+          </select>
+        </div>
+
+        <p class="settings-help">
+          선택한 폰트/테마는 다음에 이 사이트를 열어도 유지됩니다.
+        </p>
+      </section>
     </section>
+
 
     <!-- 범위 입력 도구 -->
     <section class="range-section">
