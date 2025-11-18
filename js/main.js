@@ -30,6 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const applyRangeBtn = document.getElementById("apply-range-btn");
 
   // 명언 + 달력
+  const quoteEn = document.getElementById("quote-en");
+  const quoteKr = document.getElementById("quote-kr");
   const motivationTextEl = document.getElementById("motivation-text");
   const calendarTitleEl = document.getElementById("calendar-title");
   const calendarBodyEl = document.getElementById("calendar-body");
@@ -44,6 +46,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const newCategoryColorInput = document.getElementById("new-category-color");
   const addCategoryBtn = document.getElementById("add-category-btn");
   const categoryListEl = document.getElementById("category-list");
+  // 디자인 설정
+  const fontSelect = document.getElementById("font-select");
+  const themeSelect = document.getElementById("theme-select");
+
 
   if (!grid) {
     console.error("timeboxing-grid 요소를 찾을 수 없습니다.");
@@ -63,17 +69,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 명언들
   const MOTIVATION_QUOTES = [
-    "시간을 관리하지 못하면, 결국 시간에게 끌려다닌다.",
-    "오늘 10분을 아끼면, 내일 한 시간을 벌 수 있다.",
-    "하루를 설계하는 사람만이 일주일을 바꿀 수 있다.",
-    "작은 블록 하나라도 채우면, 오늘은 이미 조금 전진한 것이다."
+  {
+    en: "The future depends on what you do today.",
+    kr: "오늘 당신이 무엇을 하느냐가 미래를 결정한다."
+  },
+  {
+    en: "Small daily improvements lead to stunning results.",
+    kr: "매일의 작은 개선이 놀라운 결과를 만든다."
+  },
+  {
+    en: "Time is a created thing. Saying 'I don't have time' means 'I don't want to.'",
+    kr: "시간은 만들어내는 것이다. ‘시간이 없다’는 말은 곧 ‘하고 싶지 않다’는 뜻이다."
+  },
+  {
+    en: "Focus on being productive, not busy.",
+    kr: "바빠 보이는 것이 아니라 생산적인 사람이 되어라."
+  },
+  {
+    en: "A little progress each day adds up to big results.",
+    kr: "매일의 작은 진전이 큰 결과를 만든다."
+  }
   ];
+
 
   // ===== localStorage 데이터 =====
   function loadData() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      return {
+            return {
         currentUser: "guest",
         users: {
           guest: {
@@ -81,8 +104,13 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         },
         categories: null,
-        dailyTodos: {}
+        dailyTodos: {},
+        ui: {
+          font: "system",
+          theme: "light"
+        }
       };
+
     }
     try {
       const parsed = JSON.parse(raw);
@@ -93,17 +121,25 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (!parsed.categories) parsed.categories = null;
       if (!parsed.dailyTodos) parsed.dailyTodos = {};
+      if (!parsed.ui) {
+         parsed.ui = { font: "system", theme: "light" };
+       }
       return parsed;
     } catch (e) {
       console.error("저장된 데이터를 파싱하는 중 오류 발생. 초기화합니다.", e);
-      return {
+            return {
         currentUser: "guest",
         users: {
           guest: { plans: {} }
         },
         categories: null,
-        dailyTodos: {}
+        dailyTodos: {},
+        ui: {
+          font: "system",
+          theme: "light"
+        }
       };
+
     }
   }
 
@@ -127,6 +163,95 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
   ensureCategories();
+
+    // ===== 폰트 / 테마 설정 =====
+  const FONT_MAP = {
+    system:
+      'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    rounded:
+      '"Malgun Gothic", "Apple SD Gothic Neo", system-ui, -apple-system, sans-serif',
+    serif:
+      '"Georgia", "Times New Roman", serif',
+    mono:
+      '"Consolas", "Courier New", "Courier", monospace',
+    casual:
+      '"Trebuchet MS", "Verdana", system-ui, sans-serif'
+  };
+
+  function applyFontSetting(fontKey) {
+    const fontValue = FONT_MAP[fontKey] || FONT_MAP.system;
+    document.body.style.fontFamily = fontValue;
+  }
+
+  function applyThemeSetting(themeKey) {
+    const header = document.querySelector(".main-header");
+
+    let bg = "#f7f7f7";
+    let text = "#333";
+    let headerBg = "#4a90e2";
+
+    switch (themeKey) {
+      case "red":
+        bg = "#ffe8ec";
+        headerBg = "#f06277";
+        break;
+      case "orange":
+        bg = "#fff3e0";
+        headerBg = "#ffb74d";
+        break;
+      case "yellow":
+        bg = "#fffde7";
+        headerBg = "#fff176";
+        break;
+      case "green":
+        bg = "#e8f5e9";
+        headerBg = "#81c784";
+        break;
+      case "blue":
+        bg = "#e3f2fd";
+        headerBg = "#64b5f6";
+        break;
+      case "purple":
+        bg = "#f3e5f5";
+        headerBg = "#ba68c8";
+        break;
+      case "gray":
+        bg = "#f0f0f0";
+        headerBg = "#757575";
+        break;
+      case "dark":
+        bg = "#222222";
+        text = "#eeeeee";
+        headerBg = "#333333";
+        break;
+      case "light":
+      default:
+        bg = "#f7f7f7";
+        text = "#333333";
+        headerBg = "#4a90e2";
+        break;
+    }
+
+    document.body.style.backgroundColor = bg;
+    document.body.style.color = text;
+
+    if (header) {
+      header.style.backgroundColor = headerBg;
+      header.style.color = "#ffffff";
+    }
+  }
+
+  function applyUISettingsFromData() {
+    if (!tmsData.ui) {
+      tmsData.ui = { font: "system", theme: "light" };
+    }
+    applyFontSetting(tmsData.ui.font);
+    applyThemeSetting(tmsData.ui.theme);
+
+    if (fontSelect) fontSelect.value = tmsData.ui.font;
+    if (themeSelect) themeSelect.value = tmsData.ui.theme;
+  }
+  
 
   // ===== 유저 / 계획 / 오늘의 할 일 유틸 =====
   function ensureUser(userName) {
@@ -434,10 +559,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ===== 명언 =====
   function initMotivation() {
-    if (!motivationTextEl) return;
-    const index = 0; // 나중에 랜덤으로 바꿔도 됨
-    motivationTextEl.textContent = MOTIVATION_QUOTES[index];
+  if (!quoteEn || !quoteKr) return;
+
+  const today = new Date();
+  const dayIndex = Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
+  const index = dayIndex % MOTIVATION_QUOTES.length;
+
+  quoteEn.textContent = MOTIVATION_QUOTES[index].en;
+  quoteKr.textContent = MOTIVATION_QUOTES[index].kr;
   }
+
 
   // ===== 달력 =====
   function initCalendar() {
@@ -640,6 +771,27 @@ document.addEventListener("DOMContentLoaded", function () {
     renderPlanForCurrentUserAndDate();
   });
 
+    // 폰트 선택 변경
+  if (fontSelect) {
+    fontSelect.addEventListener("change", function () {
+      const key = this.value;
+      tmsData.ui.font = key;
+      applyFontSetting(key);
+      saveData();
+    });
+  }
+
+  // 테마 선택 변경
+  if (themeSelect) {
+    themeSelect.addEventListener("change", function () {
+      const key = this.value;
+      tmsData.ui.theme = key;
+      applyThemeSetting(key);
+      saveData();
+    });
+  }
+
+
   // 달력 이전/다음
   calendarPrevBtn.addEventListener("click", function () {
     calendarMonth--;
@@ -680,6 +832,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initCalendar();
   renderPlanForCurrentUserAndDate();
   renderTodayTodoForCurrentUserAndDate();
+  applyUISettingsFromData();
 
   console.log("TMS Time Boxing initialized (DIY ver. with dashboard).");
 });
