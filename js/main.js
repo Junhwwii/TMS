@@ -50,6 +50,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const fontSelect = document.getElementById("font-select");
   const themeSelect = document.getElementById("theme-select");
 
+  // 오늘 하루 평점
+  const ratingStarsContainer = document.getElementById("daily-rating-stars");
+  const ratingTextEl = document.getElementById("daily-rating-text");
+
+  // 오늘 하루 회고 / 내일 목표
+  const dailyReflectionInput = document.getElementById("daily-reflection");
+  const dailyTomorrowGoalInput = document.getElementById("daily-tomorrow-goal");
+
 
   if (!grid) {
     console.error("timeboxing-grid 요소를 찾을 수 없습니다.");
@@ -105,6 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         categories: null,
         dailyTodos: {},
+        dailyRatings: {},
+        dailyReviews: {},
         ui: {
           font: "system",
           theme: "light"
@@ -121,6 +131,8 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (!parsed.categories) parsed.categories = null;
       if (!parsed.dailyTodos) parsed.dailyTodos = {};
+      if (!parsed.dailyRatings) parsed.dailyRatings = {};
+      if (!parsed.dailyReviews) parsed.dailyReviews = {};
       if (!parsed.ui) {
          parsed.ui = { font: "system", theme: "light" };
        }
@@ -134,6 +146,8 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         categories: null,
         dailyTodos: {},
+        dailyRatings: {},
+        dailyReviews: {},
         ui: {
           font: "system",
           theme: "light"
@@ -272,6 +286,8 @@ document.addEventListener("DOMContentLoaded", function () {
     updateUserUI();
     renderPlanForCurrentUserAndDate();
     renderTodayTodoForCurrentUserAndDate();
+    renderDailyRatingForCurrentUserAndDate();
+    renderDailyReviewForCurrentUserAndDate();
   }
 
   function getCurrentDateString() {
@@ -307,6 +323,20 @@ document.addEventListener("DOMContentLoaded", function () {
     return `${y}-${m}-${d}`;
   }
 
+  function getPreviousDateString(dateStr) {
+    if (!dateStr) return null;
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return null;
+
+    d.setDate(d.getDate() - 1);
+
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+
   function slotId(hour, slot) {
     return `${hour}-${slot}`;
   }
@@ -334,6 +364,63 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     saveData();
   }
+
+  // 오늘 하루 평점
+  function ensureDailyRatingsRoot() {
+    if (!tmsData.dailyRatings) tmsData.dailyRatings = {};
+  }
+
+  function getDailyRating(user, dateStr) {
+    ensureDailyRatingsRoot();
+    const userRatings = tmsData.dailyRatings[user] || {};
+    return userRatings[dateStr] ?? null;
+  }
+
+  function setDailyRating(user, dateStr, score) {
+    ensureDailyRatingsRoot();
+    if (!tmsData.dailyRatings[user]) tmsData.dailyRatings[user] = {};
+    if (!dateStr) return;
+
+    if (score === null || isNaN(score)) {
+      delete tmsData.dailyRatings[user][dateStr];
+    } else {
+      tmsData.dailyRatings[user][dateStr] = score;
+    }
+    saveData();
+  }
+
+  // 오늘 하루 회고 / 내일 목표
+  function ensureDailyReviewsRoot() {
+    if (!tmsData.dailyReviews) tmsData.dailyReviews = {};
+  }
+
+  function getDailyReview(user, dateStr) {
+    ensureDailyReviewsRoot();
+    const userReviews = tmsData.dailyReviews[user] || {};
+    return userReviews[dateStr] || { reflection: "", tomorrowGoal: "" };
+  }
+
+  function setDailyReview(user, dateStr, reflection, tomorrowGoal) {
+    ensureDailyReviewsRoot();
+    if (!tmsData.dailyReviews[user]) tmsData.dailyReviews[user] = {};
+    if (!dateStr) return;
+
+    const trimmedReflection = (reflection || "").trim();
+    const trimmedTomorrow = (tomorrowGoal || "").trim();
+
+    if (!trimmedReflection && !trimmedTomorrow) {
+      // 둘 다 비어 있으면 기록 삭제
+      delete tmsData.dailyReviews[user][dateStr];
+    } else {
+      tmsData.dailyReviews[user][dateStr] = {
+        reflection: trimmedReflection,
+        tomorrowGoal: trimmedTomorrow
+      };
+    }
+    saveData();
+  }
+
+
 
   // ===== 카테고리 관련 =====
   function applySlotVisual(box, text, categoryKey) {
@@ -555,7 +642,104 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     const text = getDailyTodo(user, dateStr);
     todayTodoInput.value = text;
+
+    // 오늘의 할 일이 비어 있다면, 어제의 '내일 목표'를 자동으로 가져오기
+    if (!text || text.trim() === "") {
+      autoFillTodayTodoFromYesterdayGoal();
+    }
   }
+
+
+  // 어제의 '내일 목표'를 오늘의 할 일에 자동 반영
+  function autoFillTodayTodoFromYesterdayGoal() {
+    if (!todayTodoInput) return;
+
+    const user = getCurrentUser();
+    const dateStr = getCurrentDateString();
+    if (!dateStr) return;
+
+    const currentTodo = getDailyTodo(user, dateStr);
+    // 이미 오늘의 할 일이 있으면 건드리지 않음
+    if (currentTodo && currentTodo.trim() !== "") return;
+
+    const prevDateStr = getPreviousDateString(dateStr);
+    if (!prevDateStr) return;
+
+    const prevReview = getDailyReview(user, prevDateStr);
+    const goal = (prevReview && prevReview.tomorrowGoal) || "";
+    if (!goal || goal.trim() === "") return;
+
+    // 어제의 '내일 목표'를 오늘의 할 일로 채움
+    todayTodoInput.value = goal;
+    setDailyTodo(user, dateStr, goal);
+  }
+
+  // 오늘 하루 평점 렌더링
+  function renderDailyRatingForCurrentUserAndDate() {
+    if (!ratingStarsContainer) return;
+    const user = getCurrentUser();
+    const dateStr = getCurrentDateString();
+
+    const stars = ratingStarsContainer.querySelectorAll(".rating-star");
+
+    if (!dateStr) {
+      // 날짜가 없으면 별 비우고 텍스트도 초기화
+      stars.forEach((star) => star.classList.remove("filled"));
+      if (ratingTextEl) {
+        ratingTextEl.textContent = "먼저 날짜를 선택해 주세요.";
+      }
+      return;
+    }
+
+    const score = getDailyRating(user, dateStr);
+
+    let filledCount = 0;
+    if (typeof score === "number") {
+      // 0~10 점수를 0~5개의 별로 매핑 (반올림)
+      filledCount = Math.round(score / 2);
+      if (filledCount < 0) filledCount = 0;
+      if (filledCount > 5) filledCount = 5;
+    }
+
+    stars.forEach((star) => {
+      const starIndex = parseInt(star.dataset.star, 10);
+      if (starIndex <= filledCount) {
+        star.classList.add("filled");
+      } else {
+        star.classList.remove("filled");
+      }
+    });
+
+    if (ratingTextEl) {
+      if (typeof score === "number") {
+        ratingTextEl.textContent = `오늘 점수: ${score.toFixed(1)} / 10`;
+      } else {
+        ratingTextEl.textContent = "아직 오늘 점수를 남기지 않았어요.";
+      }
+    }
+  }
+
+
+  // 오늘 하루 회고 / 내일 목표 렌더링
+  function renderDailyReviewForCurrentUserAndDate() {
+    if (!dailyReflectionInput || !dailyTomorrowGoalInput) return;
+
+    const user = getCurrentUser();
+    const dateStr = getCurrentDateString();
+
+    if (!dateStr) {
+      dailyReflectionInput.value = "";
+      dailyReflectionInput.placeholder = "먼저 날짜를 선택해 주세요.";
+      dailyTomorrowGoalInput.value = "";
+      dailyTomorrowGoalInput.placeholder = "먼저 날짜를 선택해 주세요.";
+      return;
+    }
+
+    const review = getDailyReview(user, dateStr);
+    dailyReflectionInput.value = review.reflection || "";
+    dailyTomorrowGoalInput.value = review.tomorrowGoal || "";
+  }
+
 
   // ===== 명언 =====
   function initMotivation() {
@@ -655,6 +839,8 @@ document.addEventListener("DOMContentLoaded", function () {
     planDateInput.value = todayStr;
     renderPlanForCurrentUserAndDate();
     renderTodayTodoForCurrentUserAndDate();
+    renderDailyRatingForCurrentUserAndDate();
+    renderDailyReviewForCurrentUserAndDate();
 
     const d = new Date(todayStr);
     calendarYear = d.getFullYear();
@@ -670,19 +856,27 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
     const ok = confirm(
-      `${user} 사용자의 ${dateStr} 계획과 '오늘의 할 일'을 모두 삭제하시겠습니까?`
+      `${user} 사용자의 ${dateStr} 계획, '오늘의 할 일', 하루 평점, 회고 및 내일 목표를 모두 삭제하시겠습니까?`
     );
     if (!ok) return;
 
     clearPlan(user, dateStr);
     setDailyTodo(user, dateStr, "");
+    setDailyRating(user, dateStr, null);
+    setDailyReview(user, dateStr, "", "");
     renderPlanForCurrentUserAndDate();
     renderTodayTodoForCurrentUserAndDate();
+    renderDailyRatingForCurrentUserAndDate();
+    renderDailyReviewForCurrentUserAndDate();
   });
+
+
 
   planDateInput.addEventListener("change", function () {
     renderPlanForCurrentUserAndDate();
     renderTodayTodoForCurrentUserAndDate();
+    renderDailyRatingForCurrentUserAndDate();
+    renderDailyReviewForCurrentUserAndDate();
 
     const d = new Date(this.value);
     if (!isNaN(d.getTime())) {
@@ -735,6 +929,38 @@ document.addEventListener("DOMContentLoaded", function () {
     saveData();
     renderPlanForCurrentUserAndDate();
   });
+
+    // 오늘 하루 평점 - 별 클릭 이벤트
+  if (ratingStarsContainer) {
+    ratingStarsContainer.addEventListener("click", function (event) {
+      const target = event.target;
+      if (!target.classList.contains("rating-star")) return;
+
+      const user = getCurrentUser();
+      const dateStr = getCurrentDateString();
+      if (!dateStr) {
+        alert("먼저 날짜를 선택해 주세요.");
+        return;
+      }
+
+      const currentScore = getDailyRating(user, dateStr);
+      const input = prompt(
+        "오늘 하루 점수를 0~10 사이의 숫자로 입력해 주세요.\n소수점도 입력할 수 있습니다.",
+        typeof currentScore === "number" ? String(currentScore) : ""
+      );
+      if (input === null) return;
+
+      const score = parseFloat(input);
+      if (isNaN(score) || score < 0 || score > 10) {
+        alert("0 이상 10 이하의 숫자를 입력해 주세요.");
+        return;
+      }
+
+      setDailyRating(user, dateStr, score);
+      renderDailyRatingForCurrentUserAndDate();
+    });
+  }
+
 
   // 카테고리 추가
   addCategoryBtn.addEventListener("click", function () {
@@ -821,6 +1047,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // 오늘 하루 회고 / 내일 목표 입력 → 실시간 저장
+  if (dailyReflectionInput || dailyTomorrowGoalInput) {
+    const saveReview = function () {
+      const user = getCurrentUser();
+      const dateStr = getCurrentDateString();
+      if (!dateStr) return;
+
+      const reflection = dailyReflectionInput ? dailyReflectionInput.value : "";
+      const tomorrowGoal = dailyTomorrowGoalInput ? dailyTomorrowGoalInput.value : "";
+      setDailyReview(user, dateStr, reflection, tomorrowGoal);
+    };
+
+    if (dailyReflectionInput) {
+      dailyReflectionInput.addEventListener("input", saveReview);
+    }
+    if (dailyTomorrowGoalInput) {
+      dailyTomorrowGoalInput.addEventListener("input", saveReview);
+    }
+  }
+
+
   // ===== 초기 실행 순서 =====
   initTimeSelects();
   createGrid();
@@ -832,6 +1079,8 @@ document.addEventListener("DOMContentLoaded", function () {
   initCalendar();
   renderPlanForCurrentUserAndDate();
   renderTodayTodoForCurrentUserAndDate();
+  renderDailyRatingForCurrentUserAndDate();
+  renderDailyReviewForCurrentUserAndDate();
   applyUISettingsFromData();
 
   console.log("TMS Time Boxing initialized (DIY ver. with dashboard).");
