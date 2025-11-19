@@ -255,6 +255,46 @@
       <div id="timeboxing-grid" class="timeboxing-grid"></div>
     </section>
 
+        <!-- 오늘 하루 정리 -->
+    <section class="summary-section">
+      <h2>오늘 하루 정리</h2>
+      <p class="summary-guide">
+        오늘 하루를 0~10점으로 평가해 보세요. 별을 누르면 점수를 입력하는 창이 뜨고,
+        입력한 점수에 맞게 별이 채워집니다. (0점은 0개, 10점은 5개 별로 표시)
+      </p>
+
+      <div class="rating-row">
+        <div id="daily-rating-stars" class="rating-stars" aria-label="오늘 하루 평점">
+          <button type="button" class="rating-star" data-star="1">★</button>
+          <button type="button" class="rating-star" data-star="2">★</button>
+          <button type="button" class="rating-star" data-star="3">★</button>
+          <button type="button" class="rating-star" data-star="4">★</button>
+          <button type="button" class="rating-star" data-star="5">★</button>
+        </div>
+        <span id="daily-rating-text" class="rating-text"></span>
+      </div>
+
+      <div class="summary-form">
+        <div class="summary-field">
+          <label for="daily-reflection">오늘 하루는 어땠나요? (왜 이 점수를 줬는지)</label>
+          <textarea
+            id="daily-reflection"
+            class="summary-textarea"
+            placeholder="오늘 좋았던 점 / 아쉬웠던 점, 점수를 이렇게 준 이유를 적어 보세요."></textarea>
+        </div>
+
+        <div class="summary-field">
+          <label for="daily-tomorrow-goal">내일의 목표</label>
+          <textarea
+            id="daily-tomorrow-goal"
+            class="summary-textarea"
+            placeholder="내일 꼭 해내고 싶은 한 가지나 작은 목표를 적어 보세요."></textarea>
+        </div>
+      </div>
+      
+    </section>
+
+
   </main>
 
   <!-- 푸터 영역 -->
